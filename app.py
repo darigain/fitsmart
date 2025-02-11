@@ -46,7 +46,7 @@ st.markdown("[📤 Upload & Analyze](pages/upload)")
 st.markdown("[📊 Statistics](pages/statistics)")
 st.markdown("[🏆 Leaderboard](pages/leaderboard)")
 
-st.link_button("📤 Go to Upload & Analyze", "pages/upload")
-st.link_button("📊 Go to Statistics", "pages/statistics")
-st.link_button("🏆 Go to Leaderboard", "pages/leaderboard")
+st.link_button("📤 Go to Upload & Analyze", "https://fitsmart.streamlit.app/%F0%9F%93%A4%20Upload%20&%20Analyze")
+st.link_button("📊 Go to Statistics", "https://fitsmart.streamlit.app/%F0%9F%93%8A%20Statistics")
+st.link_button("🏆 Go to Leaderboard", "https://fitsmart.streamlit.app/%F0%9F%8F%86%20Leaderboard")
 
