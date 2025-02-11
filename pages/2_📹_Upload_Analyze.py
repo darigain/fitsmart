@@ -61,8 +61,7 @@ st.title("📹 Upload & Analyze")
 st.markdown("""
 1️⃣ **Record a short video** of yourself doing squats or push-ups.  
 2️⃣ **Upload the video** here.  
-3️⃣ **Get instant analysis** – rep count & feedback (soon).  
-4️⃣ **Track progress** in **Statistics & Leaderboard**.  
+3️⃣ **Get instant analysis** – rep count and feedback (soon).  
 
 ⚠️ **Note:** Your video is **not stored**! If you want to keep it, **download the processed version** after analysis.  
 """)
@@ -70,9 +69,9 @@ st.markdown("""
 # Display GIFs as instructions
 col1, col2 = st.columns(2)
 with col1:
-    st.image("https://media.giphy.com/media/eVCEGG1uKPPpcaDoFN/giphy.gif", caption="🎥 Record your video", use_column_width=True)
+    st.image("https://media.giphy.com/media/eVCEGG1uKPPpcaDoFN/giphy.gif", caption="Squats", use_container_width=True)
 with col2:
-    st.image("https://media.giphy.com/media/rHGjuFX5FBRxn6AdCU/giphy.gif", caption="💪 Get instant analysis", use_column_width=True)
+    st.image("https://media.giphy.com/media/rHGjuFX5FBRxn6AdCU/giphy.gif", caption="Push-ups", use_container_width=True)
     
 # Username input
 username = st.text_input("Enter your username:")
