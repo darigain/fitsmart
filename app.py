@@ -42,18 +42,11 @@ Your smart fitness assistant for tracking and improving your workouts.
 # st.write("👟 Ready to start? Head to the **Upload & Analyze** section!")
 st.write("👟 **Ready to start? Choose an option below:**")
 
-# **Navigation Buttons in Main Page**
-col1, col2, col3 = st.columns(3)
+st.markdown("[📤 Upload & Analyze](pages/upload)")
+st.markdown("[📊 Statistics](pages/statistics)")
+st.markdown("[🏆 Leaderboard](pages/leaderboard)")
 
-with col1:
-    if st.button("📤 Upload & Analyze"):
-        st.switch_page("pages/upload.py")
-
-with col2:
-    if st.button("📊 Statistics"):
-        st.switch_page("pages/statistics.py")
-
-with col3:
-    if st.button("🏆 Leaderboard"):
-        st.switch_page("pages/leaderboard.py")
+st.link_button("📤 Go to Upload & Analyze", "pages/upload")
+st.link_button("📊 Go to Statistics", "pages/statistics")
+st.link_button("🏆 Go to Leaderboard", "pages/leaderboard")
 
