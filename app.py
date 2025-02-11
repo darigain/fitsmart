@@ -1,5 +1,16 @@
 import streamlit as st
+from st_pages import Page, show_pages
 
+show_pages(
+    [
+        Page("app.py", "🏠 Home"),
+        Page("pages/upload.py", "📤 Upload & Analyze"),
+        # Page("pages/history.py", "📜 Workout History"),
+        Page("pages/statistics.py", "📊 Statistics"),
+        Page("pages/leaderboard.py", "🏆 Leaderboard"),
+        # Page("pages/about.py", "ℹ️ About"),
+    ]
+)
 st.set_page_config(page_title="FitSmart", page_icon="🏋️")
 
 # GitHub raw URL of your logo (replace with your actual repo URL)
