@@ -66,13 +66,14 @@ with col2:
     st.image("https://media.giphy.com/media/rHGjuFX5FBRxn6AdCU/giphy.gif", caption="Push-ups", use_container_width=True)
 
 st.markdown("""
-**This is the easiest way to track your progress:**  
-1️⃣ **Open this page on your phone**  
-2️⃣ **Enter your username**  
-3️⃣ **Record a quick video** (or upload a pre-recorded one) of you doing **squats & push-ups**  
-4️⃣ **Get instant analysis** – rep count & feedback *(coming soon!)*  
+💡 **The easiest way to start:**  
 
-⚠️ **Note:** Your video is **not stored**! If you want to keep it, **download the processed version** after analysis.  
+1️⃣ Open **FitSmart** in your phone browser  
+2️⃣ Enter your **username**  
+3️⃣ Record a quick video of **squats** and **push-ups**  
+4️⃣ Get **instant analysis**  
+
+⚠️ **Note:** Your video **is not stored**! Download it if you want to save it.  
 """)
     
 # Username input
@@ -237,3 +238,4 @@ if username and uploaded_file:
 
     # Display the re-encoded video
     st.video(final_video_path)
+    st.download_button("📥 Download Processed Video", final_video_path)
