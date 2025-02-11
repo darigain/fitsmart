@@ -58,20 +58,22 @@ def fix_video_orientation(frame):
 # Streamlit UI
 st.title("📹 Upload & Analyze")
 
-st.markdown("""
-1️⃣ **Record a short video** of yourself doing squats or push-ups.  
-2️⃣ **Upload the video** here.  
-3️⃣ **Get instant analysis** – rep count and feedback (soon).  
-
-⚠️ **Note:** Your video is **not stored**! If you want to keep it, **download the processed version** after analysis.  
-""")
-
 # Display GIFs as instructions
 col1, col2 = st.columns(2)
 with col1:
     st.image("https://media.giphy.com/media/eVCEGG1uKPPpcaDoFN/giphy.gif", caption="Squats", use_container_width=True)
 with col2:
     st.image("https://media.giphy.com/media/rHGjuFX5FBRxn6AdCU/giphy.gif", caption="Push-ups", use_container_width=True)
+
+st.markdown("""
+**This is the easiest way to track your progress:**  
+1️⃣ **Open this page on your phone**  
+2️⃣ **Enter your username**  
+3️⃣ **Record a quick video** (or upload a pre-recorded one) of you doing **squats & push-ups**  
+4️⃣ **Get instant analysis** – rep count & feedback *(coming soon!)*  
+
+⚠️ **Note:** Your video is **not stored**! If you want to keep it, **download the processed version** after analysis.  
+""")
     
 # Username input
 username = st.text_input("Enter your username:")
