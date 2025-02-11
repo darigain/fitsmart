@@ -39,4 +39,21 @@ Your smart fitness assistant for tracking and improving your workouts.
 - 💡 Receive smart feedback to refine your form.
 """)
 
-st.write("👟 Ready to start? Head to the **Upload & Analyze** section!")
+# st.write("👟 Ready to start? Head to the **Upload & Analyze** section!")
+st.write("👟 **Ready to start? Choose an option below:**")
+
+# **Navigation Buttons in Main Page**
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    if st.button("📤 Upload & Analyze"):
+        st.switch_page("pages/upload.py")
+
+with col2:
+    if st.button("📊 Statistics"):
+        st.switch_page("pages/statistics.py")
+
+with col3:
+    if st.button("🏆 Leaderboard"):
+        st.switch_page("pages/leaderboard.py")
+
