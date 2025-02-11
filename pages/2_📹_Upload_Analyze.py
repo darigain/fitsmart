@@ -4,9 +4,8 @@ import mediapipe as mp
 import numpy as np
 import tempfile
 import subprocess
-import psycopg2  # NEW FEATURE: Added for database connection using Streamlit secrets
-import datetime  # NEW FEATURE: Added for datetime timestamp
-# 💪_Workout_Analysis
+import psycopg2 
+import datetime  
 
 # Initialize Mediapipe Pose
 mp_pose = mp.solutions.pose
@@ -23,7 +22,7 @@ def calculate_angle(a, b, c):
         angle = 360 - angle
     return angle
 
-# Function to detect exercise type (unchanged)
+# Function to detect exercise type
 def detect_exercise_type(keypoints):
     shoulder = keypoints["RIGHT_SHOULDER"]
     hip = keypoints["RIGHT_HIP"]
@@ -43,36 +42,45 @@ def detect_exercise_type(keypoints):
         return "push-up"
     return "unknown"
 
-# Function to count reps (unchanged)
+# Function to count reps
 def count_reps(current_phase, prev_phase, count):
     if prev_phase == "down" and current_phase == "up":
         return count + 1, current_phase
     return count, current_phase
 
+# Ensure the video is in vertical orientation by rotating frames if needed.
 def fix_video_orientation(frame):
-    """
-    Ensure the video is in vertical orientation by rotating frames if needed.
-    Args:
-        frame (numpy.ndarray): A single video frame.
-    Returns:
-        numpy.ndarray: The rotated (or original) frame.
-    """
     height, width = frame.shape[:2]
     if width > height:  # Landscape orientation detected
-        # Rotate the frame 90 degrees counter-clockwise
         frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)  # COUNTERCLOCKWISE
     return frame
 
 # Streamlit UI
-st.title("Exercise Counter: Squats & Push-Ups")
+st.title("📹 Upload & Analyze")
 
-# NEW FEATURE: Username input.
+st.markdown("""
+1️⃣ **Record a short video** of yourself doing squats or push-ups.  
+2️⃣ **Upload the video** here.  
+3️⃣ **Get instant analysis** – rep count & feedback (soon).  
+4️⃣ **Track progress** in **Statistics & Leaderboard**.  
+
+⚠️ **Note:** Your video is **not stored**! If you want to keep it, **download the processed version** after analysis.  
+""")
+
+# Display GIFs as instructions
+col1, col2 = st.columns(2)
+with col1:
+    st.image("https://media.giphy.com/media/eVCEGG1uKPPpcaDoFN/giphy.gif", caption="🎥 Record your video", use_column_width=True)
+with col2:
+    st.image("https://media.giphy.com/media/rHGjuFX5FBRxn6AdCU/giphy.gif", caption="💪 Get instant analysis", use_column_width=True)
+    
+# Username input
 username = st.text_input("Enter your username:")
 
 # Upload video
 uploaded_file = st.file_uploader("Upload a video file", type=["mp4", "mov", "avi"])
 
-if uploaded_file:
+if username and uploaded_file:
     # Save file temporarily
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
     temp_file.write(uploaded_file.read())
@@ -174,8 +182,8 @@ if uploaded_file:
 
     # Display results
     st.success("Processing Complete!")
-    st.write(f"**Total Squats:** {squat_count}")
-    st.write(f"**Total Push-Ups:** {pushup_count}")
+    st.write(f"**🏋️ Total Squats:** {squat_count}")
+    st.write(f"**💪 Total Push-Ups:** {pushup_count}")
 
     # NEW FEATURE: Insert record into the database table (username, datetime, squat_count, pushup_count)
     if username:  # Only insert if username is provided
