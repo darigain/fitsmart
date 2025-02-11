@@ -1,7 +1,7 @@
 # FitSmart
 
 ![FitSmart Logo](visuals/logo_small.png)  
-*AI-powered exercise tracker: Upload workout videos, analyze squats & push-ups, get insights, and compete on leaderboards.*
+*Smart exercise tracker: Upload workout videos, analyze squats & push-ups, get insights, and compete on leaderboards.*
 
 ## 🚀 Features
 - 📹 **Upload & Analyze**: Submit workout videos for automatic squat & push-up detection.
