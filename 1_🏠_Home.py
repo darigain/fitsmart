@@ -11,7 +11,13 @@ import streamlit as st
 #         # Page("pages/about.py", "ℹ️ About"),
 #     ]
 # )
-st.set_page_config(page_title="FitSmart", page_icon="🏋️")
+# st.set_page_config(page_title="FitSmart", page_icon="🏋️")
+
+st.set_page_config(
+    page_title="FitSmart",
+    page_icon="https://raw.githubusercontent.com/darigain/fitsmart/main/visuals/favicon.png"  # Update this URL
+)
+
 
 # GitHub raw URL of your logo (replace with your actual repo URL)
 GITHUB_USERNAME = "darigain"
