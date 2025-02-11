@@ -1,16 +1,16 @@
 import streamlit as st
-from st_pages import Page, show_pages
+# from st_pages import Page, show_pages
 
-show_pages(
-    [
-        Page("app.py", "🏠 Home"),
-        Page("pages/upload.py", "📹 Upload & Analyze"),
-        # Page("pages/history.py", "📜 Workout History"),
-        Page("pages/statistics.py", "📊 Statistics"),
-        Page("pages/leaderboard.py", "🏆 Leaderboard"),
-        # Page("pages/about.py", "ℹ️ About"),
-    ]
-)
+# show_pages(
+#     [
+#         Page("app.py", "🏠 Home"),
+#         Page("pages/upload.py", "📹 Upload & Analyze"),
+#         # Page("pages/history.py", "📜 Workout History"),
+#         Page("pages/statistics.py", "📊 Statistics"),
+#         Page("pages/leaderboard.py", "🏆 Leaderboard"),
+#         # Page("pages/about.py", "ℹ️ About"),
+#     ]
+# )
 st.set_page_config(page_title="FitSmart", page_icon="🏋️")
 
 # GitHub raw URL of your logo (replace with your actual repo URL)
@@ -51,19 +51,16 @@ st.markdown("### Quick Navigation 👇")
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    if st.button("📤 Upload & Analyze"):
-        st.switch_page("📹 Upload & Analyze")  
-        # st.switch_page("pages/upload.py")  
+    if st.button("📹 Upload Analyze"):
+        st.switch_page("pages/2_📹_Upload_Analyze.py")  
 
 with col2:
     if st.button("📊 Statistics"):
-        st.switch_page("📊 Statistics") 
-        # st.switch_page("pages/statistics.py") 
+        st.switch_page("pages/3_📊_Statistics.py") 
 
 with col3:
     if st.button("🏆 Leaderboard"):
-        st.switch_page("🏆 Leaderboard") 
-        # st.switch_page("pages/leaderboard.py") 
+        st.switch_page("pages/4_🏆_Leaderboard.py") 
 
 # st.markdown("[📤 Upload & Analyze](pages/upload)")
 # st.markdown("[📊 Statistics](pages/statistics)")
