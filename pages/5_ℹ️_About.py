@@ -2,44 +2,51 @@ import streamlit as st
 
 st.title("ℹ️ About FitSmart")
 
-## **Goal 🎯**
+## 💫 Goal
+st.header("💫 Goal")
 st.markdown(
     """
-    My passion lies in making **simple and accessible fitness** a reality. I sincerely believe that **regular exercise builds a healthier life**, 
-    and it’s **empowering to train anywhere**, without the need for gym memberships.
+    My passion is making **simple and accessible fitness** a daily habit.  
+    I truly believe that **regular exercise improves health and well-being**, and it’s **empowering to work out anywhere**, without the need for gym memberships.
 
-    But let’s be honest—**motivation is hard**. What works?
-    
-    ✅ A **record** of your workout: a journal entry, a message to a friend, or **a smart app like FitSmart**. 
+    But let’s be honest—**staying motivated is hard**.  
+    What helps?  
 
-    **FitSmart** makes it fun and easy to **track progress, stay accountable, and build a fitness habit**!
+    ✅ A **record** of your workouts: a journal entry, a message to a friend, or **a smart tool like FitSmart**.  
+
+    **FitSmart** helps you stay on track, build consistency, and make fitness a part of your lifestyle.
     """
 )
 
-## **App Overview 📱**
+## 📱 App Overview
+st.header("📱 App Overview")
 st.markdown(
     """
-    With **FitSmart**, your **phone becomes your fitness tracker**:
+    FitSmart transforms your **phone into a smart fitness tracker**:
 
-    - 📹 **Record a short workout video** (squats & push-ups)
-    - 🏋️‍♂️ **Smart analysis** counts your reps automatically
-    - 📊 **Track progress** with statistics and history
-    - 🏆 **Compete on the leaderboard** with friends & the community
-    
+    - 📹 **Record** a quick workout video of squats and push-ups.
+    - 🏋️‍♂️ **Get instant analysis** – rep count & feedback (coming soon).
+    - 📊 **Track progress** with workout history and statistics.
+    - 🏆 **Compete on the leaderboard** and challenge friends.
+
     🚀 **No excuses—just move!**
     """
 )
 
-## **Methodology ⚙️**
+## ⚙️ Methodology
+st.header("⚙️ Methodology")
 st.markdown(
     """
     **How does FitSmart work?**  
-    - Uses **computer vision** to analyze squats and push-ups.  
-    - Detects **key body positions** and calculates rep count.  
+    - Uses **computer vision** to detect squats and push-ups.  
+    - Tracks **key body positions** to count reps automatically.  
     - Saves workout data in a **secure database** for tracking progress.  
-    - Future updates will include **form feedback and injury prevention tips!**  
+    - Future improvements will add **form analysis, smart insights, and AI-driven recommendations**.
 
-    🔬 **Next steps:** Adding **advanced insights**, **AI-driven feedback**, and **personalized workout suggestions**.
+    🔬 **Next Steps:**  
+    - Adding **personalized feedback** to improve exercise form.  
+    - Detecting **common mistakes** and suggesting corrections.  
+    - Making workouts **even more fun and effective!**
     """
 )
 
