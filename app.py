@@ -52,15 +52,15 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     if st.button("📤 Upload & Analyze"):
-        st.switch_page("upload")  
+        st.switch_page("pages/upload.py")  
 
 with col2:
     if st.button("📊 Statistics"):
-        st.switch_page("statistics") 
+        st.switch_page("pages/statistics.py") 
 
 with col3:
     if st.button("🏆 Leaderboard"):
-        st.switch_page("leaderboard") 
+        st.switch_page("pages/leaderboard.py") 
 
 # st.markdown("[📤 Upload & Analyze](pages/upload)")
 # st.markdown("[📊 Statistics](pages/statistics)")
