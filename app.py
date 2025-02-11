@@ -4,7 +4,7 @@ from st_pages import Page, show_pages
 show_pages(
     [
         Page("app.py", "🏠 Home"),
-        Page("pages/upload.py", "📤 Upload & Analyze"),
+        Page("pages/upload.py", "📹 Upload & Analyze"),
         # Page("pages/history.py", "📜 Workout History"),
         Page("pages/statistics.py", "📊 Statistics"),
         Page("pages/leaderboard.py", "🏆 Leaderboard"),
@@ -31,22 +31,42 @@ st.image(LOGO_URL, width=250)
 # # st.sidebar.page_link("pages/about.py", label="ℹ️ About")
 
 st.markdown("""
-## Welcome to FitSmart! 🎉
-Your smart fitness assistant for tracking and improving your workouts. 
-- 📹 Upload workout videos for analysis.
-- 📊 Get real-time stats on your squats and push-ups.
-- 🏆 Compete on the leaderboard and track your progress.
-- 💡 Receive smart feedback to refine your form.
+# 👋 Welcome to **FitSmart**!  
+Your **smart fitness assistant** for tracking and improving your workouts.  
+FitSmart helps you **analyze your workout videos**, **count your reps**, and **track your progress** over time.  
+
+## 🚀 How to Get Started?  
+
+👈 **Use the sidebar on the left to navigate:**  
+
+- **📹 Upload & Analyze** – Submit your workout video and get instant analysis of your squats and push-ups.  
+- **📊 Statistics** – View your exercise history, filter by date and exercise, and track your progress over time.  
+- **🏆 Leaderboard** – Compete with others! Check out the **top users** and see where you rank.  
+
+🎯 **Ready? Let’s get moving! 🚀**
 """)
 
-# st.write("👟 Ready to start? Head to the **Upload & Analyze** section!")
-st.write("👟 **Ready to start? Choose an option below:**")
+# Add navigation buttons inside the main page
+st.markdown("### Quick Navigation 👇")
+col1, col2, col3 = st.columns(3)
 
-st.markdown("[📤 Upload & Analyze](pages/upload)")
-st.markdown("[📊 Statistics](pages/statistics)")
-st.markdown("[🏆 Leaderboard](pages/leaderboard)")
+with col1:
+    if st.button("📹 Upload & Analyze"):
+        st.switch_page("pages/upload.py")
 
-st.link_button("📤 Go to Upload & Analyze", "https://fitsmart.streamlit.app/%F0%9F%93%A4%20Upload%20&%20Analyze")
-st.link_button("📊 Go to Statistics", "https://fitsmart.streamlit.app/%F0%9F%93%8A%20Statistics")
-st.link_button("🏆 Go to Leaderboard", "https://fitsmart.streamlit.app/%F0%9F%8F%86%20Leaderboard")
+with col2:
+    if st.button("📊 Statistics"):
+        st.switch_page("pages/statistics.py")
+
+with col3:
+    if st.button("🏆 Leaderboard"):
+        st.switch_page("pages/leaderboard.py")
+
+# st.markdown("[📤 Upload & Analyze](pages/upload)")
+# st.markdown("[📊 Statistics](pages/statistics)")
+# st.markdown("[🏆 Leaderboard](pages/leaderboard)")
+
+# st.link_button("📤 Go to Upload & Analyze", "https://fitsmart.streamlit.app/%F0%9F%93%A4%20Upload%20&%20Analyze")
+# st.link_button("📊 Go to Statistics", "https://fitsmart.streamlit.app/%F0%9F%93%8A%20Statistics")
+# st.link_button("🏆 Go to Leaderboard", "https://fitsmart.streamlit.app/%F0%9F%8F%86%20Leaderboard")
 
