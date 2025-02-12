@@ -258,15 +258,4 @@ if username and uploaded_file:
 
     # Display the re-encoded video
     st.video(final_video_path)
-    
-st.markdown("""
-👇 Next steps: Find your last submission on the Statistics page, or check your position on the Leaderboard page.
-""")
-
-col5, col6 = st.columns(2)
-with col5:
-    if st.button("📊 Statistics"):
-        st.switch_page("pages/3_📊_Statistics.py")
-with col6:
-    if st.button("🏆 Leaderboard"):
-        st.switch_page("pages/4_🏆_Leaderboard.py") 
+    st.info("👈 Use the sidebar to find your last submission on the 📊 Statistics page, or check your position on the 🏆 Leaderboard page!")
