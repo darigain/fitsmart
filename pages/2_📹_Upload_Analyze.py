@@ -238,4 +238,3 @@ if username and uploaded_file:
 
     # Display the re-encoded video
     st.video(final_video_path)
-    st.download_button("📥 Download Processed Video", final_video_path)
