@@ -33,7 +33,7 @@ st.write("🏆 Champions, you are absolutely crushing it! 🌟")
 # Refresh button (in the main area)
 if st.button("Refresh Data"):
     load_data.clear()        # Clear the cache for load_data
-    st.experimental_rerun()  # Force a rerun to load fresh data
+    st.rerun()  # Force a rerun to load fresh data
 
 # Load data from the database.
 df = load_data()
