@@ -37,12 +37,11 @@ st.image(LOGO_URL, width=250)
 # # st.sidebar.page_link("pages/about.py", label="ℹ️ About")
 
 st.markdown("""
-# 👋 Welcome to **FitSmart**!  
+# Welcome to **FitSmart**!  
 FitSmart helps you **analyze your workout videos**, **count your reps**, and **track your progress** over time. 
 
-Supported exercises:
+*Supported exercises:*
 """)
-
 # Display GIFs as instructions
 col1, col2 = st.columns(2)
 with col1:
@@ -51,7 +50,7 @@ with col2:
     st.image("https://media.giphy.com/media/rHGjuFX5FBRxn6AdCU/giphy.gif", caption="Push-ups", use_container_width=True)
 
 st.markdown("""
-# 🚀 How to Get Started?  
+# How to Get Started?  
 
 👈 **Use the sidebar on the left to navigate:**  
 
@@ -59,7 +58,7 @@ st.markdown("""
 - **📊 Statistics** – View your exercise history, filter by date and exercise, and track your progress over time.  
 - **🏆 Leaderboard** – Compete with others! Check out the **top users** and see where you rank.  
 
-🎯 **Ready? Let’s get moving! 🚀**
+**Ready? Let’s get moving! 🎯**
 
 # Quick Navigation 👇
 """)
