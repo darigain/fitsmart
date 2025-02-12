@@ -58,19 +58,39 @@ def fix_video_orientation(frame):
 # Streamlit UI
 st.title("📹 Upload & Analyze")
 
-# Display GIFs as instructions
-col1, col2 = st.columns(2)
+# # Display GIFs as instructions
+# col1, col2 = st.columns(2)
+# with col1:
+#     st.image("https://media.giphy.com/media/eVCEGG1uKPPpcaDoFN/giphy.gif", caption="Squats", use_container_width=True)
+# with col2:
+#     st.image("https://media.giphy.com/media/rHGjuFX5FBRxn6AdCU/giphy.gif", caption="Push-ups", use_container_width=True)
+
+image_urls = [
+    "https://raw.githubusercontent.com/darigain/fitsmart/main/visuals/squat_down.png",  # Replace with actual image path or URL
+    "https://raw.githubusercontent.com/darigain/fitsmart/main/visuals/squat_up.png",
+    "https://raw.githubusercontent.com/darigain/fitsmart/main/visuals/pushup_down.png",
+    "https://raw.githubusercontent.com/darigain/fitsmart/main/visuals/pushup_up.png"
+]
+
+# Create four columns for layout
+col1, col2, col3, col4 = st.columns(4)
+
+# Display images in respective columns
 with col1:
-    st.image("https://media.giphy.com/media/eVCEGG1uKPPpcaDoFN/giphy.gif", caption="Squats", use_container_width=True)
+    st.image(image_urls[0], use_container_width=True)
 with col2:
-    st.image("https://media.giphy.com/media/rHGjuFX5FBRxn6AdCU/giphy.gif", caption="Push-ups", use_container_width=True)
+    st.image(image_urls[1], use_container_width=True)
+with col3:
+    st.image(image_urls[2], use_container_width=True)
+with col4:
+    st.image(image_urls[3], use_container_width=True)
 
 st.markdown("""
 💡 **The easiest way to start:**  
 
 1️⃣ Open **FitSmart** in your phone browser  
 2️⃣ Enter your **username**  
-3️⃣ Record a quick video of **squats** and **push-ups**  
+3️⃣ Record a quick video of **squats** and **push-ups**. Film the side of the body, using vertical orientation (frontal/back camera).  
 4️⃣ Get **instant analysis**  
 
 ⚠️ **Note:** Your video **is not stored**! Download it if you want to save it.  
