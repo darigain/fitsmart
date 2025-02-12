@@ -91,3 +91,4 @@ with col4:
 # st.link_button("📊 Go to Statistics", "https://fitsmart.streamlit.app/%F0%9F%93%8A%20Statistics")
 # st.link_button("🏆 Go to Leaderboard", "https://fitsmart.streamlit.app/%F0%9F%8F%86%20Leaderboard")
 
+st.image("https://raw.githubusercontent.com/darigain/fitsmart/main/visuals/qrcode.png", width=250)
