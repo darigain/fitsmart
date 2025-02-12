@@ -38,10 +38,20 @@ st.image(LOGO_URL, width=250)
 
 st.markdown("""
 # 👋 Welcome to **FitSmart**!  
-Your **smart fitness assistant** for tracking and improving your workouts.  
-FitSmart helps you **analyze your workout videos**, **count your reps**, and **track your progress** over time.  
+FitSmart helps you **analyze your workout videos**, **count your reps**, and **track your progress** over time. 
 
-## 🚀 How to Get Started?  
+Supported exercises:
+""")
+
+# Display GIFs as instructions
+col1, col2 = st.columns(2)
+with col1:
+    st.image("https://media.giphy.com/media/eVCEGG1uKPPpcaDoFN/giphy.gif", caption="Squats", use_container_width=True)
+with col2:
+    st.image("https://media.giphy.com/media/rHGjuFX5FBRxn6AdCU/giphy.gif", caption="Push-ups", use_container_width=True)
+
+st.markdown("""
+# 🚀 How to Get Started?  
 
 👈 **Use the sidebar on the left to navigate:**  
 
@@ -50,11 +60,13 @@ FitSmart helps you **analyze your workout videos**, **count your reps**, and **t
 - **🏆 Leaderboard** – Compete with others! Check out the **top users** and see where you rank.  
 
 🎯 **Ready? Let’s get moving! 🚀**
+
+# Quick Navigation 👇
 """)
 
 # Add navigation buttons inside the main page
-st.markdown("### Quick Navigation 👇")
-col1, col2, col3 = st.columns(3)
+# st.markdown("### Quick Navigation 👇")
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     if st.button("📹 Upload Analyze"):
@@ -67,6 +79,10 @@ with col2:
 with col3:
     if st.button("🏆 Leaderboard"):
         st.switch_page("pages/4_🏆_Leaderboard.py") 
+
+with col4:
+    if st.button("ℹ️ About"):
+        st.switch_page("pages/5_ℹ️_About.py") 
 
 # st.markdown("[📤 Upload & Analyze](pages/upload)")
 # st.markdown("[📊 Statistics](pages/statistics)")
