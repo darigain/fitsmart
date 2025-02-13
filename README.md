@@ -3,6 +3,9 @@
 ![FitSmart Logo](visuals/logo_small.png)  
 *Smart exercise tracker: Upload workout videos, analyze squats & push-ups, get insights, and compete on leaderboards.*
 
+## Watch the Tutorial
+  [![Alt text](https://img.youtube.com/vi/AQjhGHTWxU8/hqdefault.jpg)](https://youtu.be/AQjhGHTWxU8)
+
 ## 🚀 Features
 - 📹 **Upload & Analyze**: Submit workout videos for automatic squat & push-up detection.
 - 📊 **Workout History**: Track all past submissions with detailed statistics.
