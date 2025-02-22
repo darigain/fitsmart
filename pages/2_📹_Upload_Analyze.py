@@ -63,6 +63,8 @@ def fix_video_orientation(frame, recorded_on_android=False):
 # Streamlit UI
 st.title("📹 Upload & Analyze")
 
+st.info("Example screenshots of exercises being performed:")
+
 # # Display GIFs as instructions
 # col1, col2 = st.columns(2)
 # with col1:
@@ -77,18 +79,38 @@ image_urls = [
     "https://raw.githubusercontent.com/darigain/fitsmart/main/visuals/pushup_up.png"
 ]
 
-# Create four columns for layout
-col1, col2, col3, col4 = st.columns(4)
+# Create two main columns for the 2x2 layout
+col1, col2 = st.columns(2)
 
-# Display images in respective columns
+# Display images in the first row
 with col1:
-    st.image(image_urls[0], width=150) # , use_container_width=True
+    st.image(image_urls[0], width=80)  # First image in the first column
 with col2:
-    st.image(image_urls[1], width=150)
+    st.image(image_urls[1], width=80)  # Second image in the second column
+
+# Create another two columns for the second row
+col3, col4 = st.columns(2)
+
+# Display images in the second row
 with col3:
-    st.image(image_urls[2], width=150)
+    st.image(image_urls[2], width=80)  # Third image in the first column
 with col4:
-    st.image(image_urls[3], width=150)
+    st.image(image_urls[3], width=80)  # Fourth image in the second column
+
+# # Create four columns for layout
+# col1, col2, col3, col4 = st.columns(4)
+
+# # Display images in respective columns
+# with col1:
+#     st.image(image_urls[0], width=150) # , use_container_width=True
+# with col2:
+#     st.image(image_urls[1], width=150)
+# with col3:
+#     st.image(image_urls[2], width=150)
+# with col4:
+#     st.image(image_urls[3], width=150)
+
+
 
 st.markdown("""
 💡 **The easiest way to start:**  
