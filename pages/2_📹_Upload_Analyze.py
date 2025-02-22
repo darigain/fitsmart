@@ -49,10 +49,13 @@ def count_reps(current_phase, prev_phase, count):
     return count, current_phase
 
 # Ensure the video is in vertical orientation by rotating frames if needed.
-def fix_video_orientation(frame):
+def fix_video_orientation(frame, recorded_on_android=False):
     height, width = frame.shape[:2]
     if width > height:  # Landscape orientation detected
         frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)  # COUNTERCLOCKWISE
+    if recorded_on_android:  
+        # If Android front camera was used, rotate by 180 degrees to fix upside-down issue
+        frame = cv2.rotate(frame, cv2.ROTATE_180)
     return frame
 
 # Streamlit UI
@@ -77,13 +80,13 @@ col1, col2, col3, col4 = st.columns(4)
 
 # Display images in respective columns
 with col1:
-    st.image(image_urls[0], use_container_width=True)
+    st.image(image_urls[0], width=150) # , use_container_width=True
 with col2:
-    st.image(image_urls[1], use_container_width=True)
+    st.image(image_urls[1], width=150)
 with col3:
-    st.image(image_urls[2], use_container_width=True)
+    st.image(image_urls[2], width=150)
 with col4:
-    st.image(image_urls[3], use_container_width=True)
+    st.image(image_urls[3], width=150)
 
 st.markdown("""
 💡 **The easiest way to start:**  
@@ -98,6 +101,8 @@ st.markdown("""
     
 # Username input
 username = st.text_input("Enter your username:")
+
+recorded_on_android = st.checkbox("Recorded using an Android front camera? (In case your video is upside down)")
 
 # Upload video
 uploaded_file = st.file_uploader("Upload a video file", type=["mp4", "mov", "avi"])
@@ -136,7 +141,7 @@ if username and uploaded_file:
             frame_count += 1
             
             # Fix orientation if needed
-            frame = fix_video_orientation(frame)
+            frame = fix_video_orientation(frame, recorded_on_android)
             
             # Resize frame
             # frame = cv2.resize(frame, (480, 640))
@@ -179,9 +184,12 @@ if username and uploaded_file:
 
                 elif exercise == "push-up":
                     elbow_angle = calculate_angle(keypoints["RIGHT_SHOULDER"], keypoints["RIGHT_ELBOW"], keypoints["RIGHT_WRIST"])
-                    stand_angle = calculate_angle(keypoints["RIGHT_SHOULDER"], keypoints["RIGHT_ANKLE"], 
-                                                  [keypoints["RIGHT_ANKLE"][0], keypoints["RIGHT_ANKLE"][1] - 1])
-                    current_phase = "down" if (elbow_angle < 90) & (stand_angle > 75) else "up"
+                    # stand_angle = calculate_angle(keypoints["RIGHT_SHOULDER"], keypoints["RIGHT_ANKLE"], 
+                    #                               [keypoints["RIGHT_ANKLE"][0], keypoints["RIGHT_ANKLE"][1] - 1])
+                    knee_shoulder_angle = calculate_angle(keypoints["RIGHT_SHOULDER"], keypoints["RIGHT_KNEE"], 
+                                                  [keypoints["RIGHT_KNEE"][0], keypoints["RIGHT_KNEE"][1] - 1])
+                    current_phase = "down" if (elbow_angle < 100) & (knee_shoulder_angle > 65) else "up"
+                    # current_phase = "down" if (elbow_angle < 90) & (stand_angle > 75) else "up"
                     pushup_count, pushup_phase = count_reps(current_phase, pushup_phase, pushup_count)
                 
                 # Draw exercise type and counts on the frame
