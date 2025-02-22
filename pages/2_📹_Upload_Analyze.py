@@ -32,13 +32,15 @@ def detect_exercise_type(keypoints):
 
     torso_angle = calculate_angle(shoulder, hip, [hip[0], hip[1] - 1])
     knee_angle = calculate_angle(hip, knee, ankle)
+    hip_angle = calculate_angle(knee, hip, shoulder)
     elbow_angle = calculate_angle(shoulder, wrist, hip)
     stand_angle = calculate_angle(shoulder, ankle, [ankle[0], ankle[1] - 1])
     plank_angle = calculate_angle(shoulder, hip, ankle)
 
     if stand_angle < 40:
         return "squat"
-    if plank_angle > 150 and knee_angle > 150:
+    # if plank_angle > 150 and knee_angle > 150:
+    if torso_angle > 45 and hip_angle > 100:
         return "push-up"
     return "unknown"
 
