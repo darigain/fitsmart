@@ -79,23 +79,24 @@ image_urls = [
     "https://raw.githubusercontent.com/darigain/fitsmart/main/visuals/pushup_up.png"
 ]
 
-# Create two main columns for the 2x2 layout
-col1, col2 = st.columns(2)
-
-# Display images in the first row
-with col1:
-    st.image(image_urls[0], use_container_width=True)  # First image in the first column
-with col2:
-    st.image(image_urls[1], use_container_width=True)  # Second image in the second column
-
-# Create another two columns for the second row
-col3, col4 = st.columns(2)
-
-# Display images in the second row
-with col3:
-    st.image(image_urls[2], use_container_width=True)  # Third image in the first column
-with col4:
-    st.image(image_urls[3], use_container_width=True)  # Fourth image in the second column
+with st.expander("👉Click to view images👈", expanded=False):
+    # Create two main columns for the 2x2 layout
+    col1, col2 = st.columns(2)
+    
+    # Display images in the first row
+    with col1:
+        st.image(image_urls[0], use_container_width=True)  # First image in the first column
+    with col2:
+        st.image(image_urls[1], use_container_width=True)  # Second image in the second column
+    
+    # Create another two columns for the second row
+    col3, col4 = st.columns(2)
+    
+    # Display images in the second row
+    with col3:
+        st.image(image_urls[2], use_container_width=True)  # Third image in the first column
+    with col4:
+        st.image(image_urls[3], use_container_width=True)  # Fourth image in the second column
 
 # # Create four columns for layout
 # col1, col2, col3, col4 = st.columns(4)
