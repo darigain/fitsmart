@@ -1,27 +1,43 @@
 import streamlit as st
-import psycopg2
+import boto3
 import pandas as pd
 import plotly.express as px
 import datetime
+
+# AWS Credentials (Using Streamlit Secrets)
+AWS_ACCESS_KEY_ID = st.secrets["AWS_ACCESS_KEY_ID"]
+AWS_SECRET_ACCESS_KEY = st.secrets["AWS_SECRET_ACCESS_KEY"]
+AWS_REGION = st.secrets["AWS_REGION"]
+DYNAMODB_TABLE = st.secrets["DYNAMODB_TABLE"]
+
+# Connect to DynamoDB
+dynamodb = boto3.resource(
+    "dynamodb",
+    region_name=AWS_REGION,
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+)
+
+table = dynamodb.Table(DYNAMODB_TABLE)
 
 # DATA LOADING FUNCTION
 @st.cache_data(show_spinner=False)
 def load_data():
     """
-    Connects to the database and loads data from the exercise_records table into a DataFrame.
+    Connects to DynamoDB and loads data from the exercise_records table into a DataFrame.
     """
     try:
-        conn = psycopg2.connect(
-            host=st.secrets["db"]["host"],
-            database=st.secrets["db"]["database"],
-            user=st.secrets["db"]["user"],
-            password=st.secrets["db"]["password"],
-            port=st.secrets["db"]["port"]
-        )
-        query = "SELECT username, datetime, squat_count, pushup_count FROM exercise_records"
-        df = pd.read_sql_query(query, conn)
-        conn.close()
-        df['datetime'] = pd.to_datetime(df['datetime'])
+        response = table.scan()
+        items = response.get("Items", [])
+        
+        if not items:
+            return pd.DataFrame(columns=["username", "datetime", "squat_count", "pushup_count"])
+
+        df = pd.DataFrame(items)
+        df["datetime"] = pd.to_datetime(df["datetime"])  # Convert datetime to pandas format
+        df["squat_count"] = df["squat_count"].astype(int)
+        df["pushup_count"] = df["pushup_count"].astype(int)
+        
         return df
     except Exception as e:
         st.error(f"Error retrieving data: {e}")
@@ -32,10 +48,10 @@ st.write("🏆 Champions, you are absolutely crushing it! 🌟")
 
 # Refresh button (in the main area)
 if st.button("Refresh Data"):
-    load_data.clear()        # Clear the cache for load_data
+    load_data.clear()  # Clear the cache for load_data
     st.rerun()  # Force a rerun to load fresh data
 
-# Load data from the database.
+# Load data from DynamoDB.
 df = load_data()
 
 if df.empty:
@@ -54,8 +70,6 @@ exercise_filter = st.selectbox(
 # ------------------------------
 # TIMEFRAME FILTER SELECTION
 # ------------------------------
-# Options: Last 24 hours, Last 7 days, Last 30 days, All Time.
-# Default to "Last 7 days" (index 1).
 timeframe = st.selectbox(
     "Select Timeframe",
     options=["Last 24 hours", "Last 7 days", "Last 30 days", "All Time"],
@@ -68,13 +82,13 @@ timeframe = st.selectbox(
 now = datetime.datetime.now()
 if timeframe == "Last 24 hours":
     threshold = now - datetime.timedelta(hours=24)
-    df = df[df['datetime'] >= threshold]
+    df = df[df["datetime"] >= threshold]
 elif timeframe == "Last 7 days":
     threshold = now - datetime.timedelta(days=7)
-    df = df[df['datetime'] >= threshold]
+    df = df[df["datetime"] >= threshold]
 elif timeframe == "Last 30 days":
     threshold = now - datetime.timedelta(days=30)
-    df = df[df['datetime'] >= threshold]
+    df = df[df["datetime"] >= threshold]
 # For "All Time", no filtering is applied.
 
 # ------------------------------
