@@ -5,3 +5,4 @@ mediapipe
 numpy
 psycopg2-binary
 plotly
+boto3
