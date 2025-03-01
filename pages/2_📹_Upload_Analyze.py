@@ -4,8 +4,23 @@ import mediapipe as mp
 import numpy as np
 import tempfile
 import subprocess
-import psycopg2 
-import datetime  
+import datetime
+import boto3
+
+# Load AWS credentials from Streamlit secrets
+AWS_ACCESS_KEY_ID = st.secrets["AWS_ACCESS_KEY_ID"]
+AWS_SECRET_ACCESS_KEY = st.secrets["AWS_SECRET_ACCESS_KEY"]
+AWS_REGION = st.secrets["AWS_REGION"]
+DYNAMODB_TABLE = st.secrets["DYNAMODB_TABLE"]
+
+# Initialize DynamoDB client
+dynamodb = boto3.resource(
+    "dynamodb",
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_REGION,
+)
+table = dynamodb.Table(DYNAMODB_TABLE)
 
 # Initialize Mediapipe Pose
 mp_pose = mp.solutions.pose
@@ -39,7 +54,6 @@ def detect_exercise_type(keypoints):
 
     if stand_angle < 40:
         return "squat"
-    # if plank_angle > 150 and knee_angle > 150:
     if torso_angle > 45 and hip_angle > 100:
         return "push-up"
     return "unknown"
@@ -53,24 +67,22 @@ def count_reps(current_phase, prev_phase, count):
 # Ensure the video is in vertical orientation by rotating frames if needed.
 def fix_video_orientation(frame, recorded_on_android=False):
     height, width = frame.shape[:2]
-    if width > height:  # Landscape orientation detected
-        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)  # COUNTERCLOCKWISE
-    if recorded_on_android:  
-        # If Android front camera was used, rotate by 180 degrees to fix upside-down issue
+    if width > height:
+        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+    if recorded_on_android:
         frame = cv2.rotate(frame, cv2.ROTATE_180)
     return frame
+
+# Re-encode the video with FFmpeg
+def reencode_video(input_path, output_path):
+    subprocess.run([
+        "ffmpeg", "-y", "-i", input_path, "-vcodec", "libx264", "-crf", "28", output_path
+    ])
 
 # Streamlit UI
 st.title("📹 Upload & Analyze")
 
 st.info("Example screenshots of exercises being performed:")
-
-# # Display GIFs as instructions
-# col1, col2 = st.columns(2)
-# with col1:
-#     st.image("https://media.giphy.com/media/eVCEGG1uKPPpcaDoFN/giphy.gif", caption="Squats", use_container_width=True)
-# with col2:
-#     st.image("https://media.giphy.com/media/rHGjuFX5FBRxn6AdCU/giphy.gif", caption="Push-ups", use_container_width=True)
 
 image_urls = [
     "https://raw.githubusercontent.com/darigain/fitsmart/main/visuals/squat_down.png",  # Replace with actual image path or URL
@@ -98,21 +110,6 @@ with st.expander("👉Click to view images👈", expanded=False):
     with col4:
         st.image(image_urls[3], use_container_width=True)  # Fourth image in the second column
 
-# # Create four columns for layout
-# col1, col2, col3, col4 = st.columns(4)
-
-# # Display images in respective columns
-# with col1:
-#     st.image(image_urls[0], width=150) # , use_container_width=True
-# with col2:
-#     st.image(image_urls[1], width=150)
-# with col3:
-#     st.image(image_urls[2], width=150)
-# with col4:
-#     st.image(image_urls[3], width=150)
-
-
-
 st.markdown("""
 💡 **The easiest way to start:**  
 
@@ -123,11 +120,10 @@ st.markdown("""
 
 ⚠️ **Note:** Your video **is not stored**! Download it if you want to save it.  
 """)
-    
+
 # Username input
 username = st.text_input("Enter your username:")
-
-recorded_on_android = st.checkbox("Recorded using an Android front camera? (In case your video is upside down)")
+recorded_on_android = st.checkbox("Recorded using an Android front camera? (If video is upside down)")
 
 # Upload video
 uploaded_file = st.file_uploader("Upload a video file", type=["mp4", "mov", "avi"])
@@ -138,18 +134,14 @@ if username and uploaded_file:
     temp_file.write(uploaded_file.read())
     video_path = temp_file.name
 
-    # Load video
     cap = cv2.VideoCapture(video_path)
 
     # Progress bar in Streamlit
     progress_bar = st.progress(0)
 
-    # Initialize counters
     squat_count, pushup_count = 0, 0
     squat_phase, pushup_phase = "up", "up"
     frame_count, frame_skip = 0, 3
-
-    # Store processed frames
     processed_frames = []
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
@@ -158,21 +150,18 @@ if username and uploaded_file:
             ret, frame = cap.read()
             if not ret:
                 break
-
+            
             # Skip frames for performance
             if frame_count % frame_skip != 0:
                 frame_count += 1
                 continue
             frame_count += 1
             
-            # Fix orientation if needed
             frame = fix_video_orientation(frame, recorded_on_android)
             
-            # Resize frame
-            # frame = cv2.resize(frame, (480, 640))
-            frame = cv2.resize(frame, (240, 426))
+            # Resize frame for performance
+            frame = cv2.resize(frame, (240, 426)) # (480, 640)
 
-            # Convert for Mediapipe
             image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             results = pose.process(image)
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -180,7 +169,6 @@ if username and uploaded_file:
             if results.pose_landmarks:
                 mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
-                # Extract keypoints
                 landmarks = results.pose_landmarks.landmark
                 keypoints = {
                     "RIGHT_SHOULDER": [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,
@@ -197,10 +185,8 @@ if username and uploaded_file:
                                     landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]
                 }
 
-                # Detect exercise (unchanged)
                 exercise = detect_exercise_type(keypoints)
 
-                # Count reps (unchanged)
                 if exercise == "squat":
                     knee_angle = calculate_angle(keypoints["RIGHT_HIP"], keypoints["RIGHT_KNEE"], keypoints["RIGHT_ANKLE"])
                     hip_angle = calculate_angle(keypoints["RIGHT_KNEE"], keypoints["RIGHT_HIP"], keypoints["RIGHT_SHOULDER"])
@@ -209,14 +195,11 @@ if username and uploaded_file:
 
                 elif exercise == "push-up":
                     elbow_angle = calculate_angle(keypoints["RIGHT_SHOULDER"], keypoints["RIGHT_ELBOW"], keypoints["RIGHT_WRIST"])
-                    # stand_angle = calculate_angle(keypoints["RIGHT_SHOULDER"], keypoints["RIGHT_ANKLE"], 
-                    #                               [keypoints["RIGHT_ANKLE"][0], keypoints["RIGHT_ANKLE"][1] - 1])
                     knee_shoulder_angle = calculate_angle(keypoints["RIGHT_SHOULDER"], keypoints["RIGHT_KNEE"], 
                                                   [keypoints["RIGHT_KNEE"][0], keypoints["RIGHT_KNEE"][1] - 1])
                     current_phase = "down" if (elbow_angle < 100) & (knee_shoulder_angle > 65) else "up"
-                    # current_phase = "down" if (elbow_angle < 90) & (stand_angle > 75) else "up"
                     pushup_count, pushup_phase = count_reps(current_phase, pushup_phase, pushup_count)
-                
+
                 # Draw exercise type and counts on the frame
                 cv2.putText(image, f"Exercise: {exercise}", (50, 50),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
@@ -224,56 +207,31 @@ if username and uploaded_file:
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2, cv2.LINE_AA)
                 cv2.putText(image, f"Push-Ups: {pushup_count} ({pushup_phase})", (50, 150),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
-
-            progress_value = min(1.0, max(0.0, frame_count / max(1, total_frames)))  # Prevents division by zero
+            
+            progress_value = min(1.0, max(0.0, frame_count / max(1, total_frames)))
             progress_bar.progress(progress_value)
-            # Update progress bar
-            # progress_bar.progress(frame_count / total_frames)
-
-            # Store processed frames
             processed_frames.append(image)
 
     cap.release()
 
-    # Display results
     st.success("Processing Complete!")
     st.write(f"**🏋️ Total Squats:** {squat_count}")
     st.write(f"**💪 Total Push-Ups:** {pushup_count}")
 
-    # NEW FEATURE: Insert record into the database table (username, datetime, squat_count, pushup_count)
-    if username:  # Only insert if username is provided
-        try:
-            # Connect to the database using credentials from Streamlit secrets
-            conn = psycopg2.connect(
-                host=st.secrets["db"]["host"],
-                database=st.secrets["db"]["database"],
-                user=st.secrets["db"]["user"],
-                password=st.secrets["db"]["password"],
-                port=st.secrets["db"]["port"]
-            )
-            cursor = conn.cursor()
-            
-            # Insert record into the table 'exercise_records'
-            insert_query = """
-            INSERT INTO exercise_records (username, datetime, squat_count, pushup_count)
-            VALUES (%s, %s, %s, %s)
-            """
-            current_time = datetime.datetime.now()
-            cursor.execute(insert_query, (username, current_time, squat_count, pushup_count))
-            conn.commit()
-            cursor.close()
-            conn.close()
-            st.success("Record inserted into database successfully!")
-        except Exception as e:
-            st.error(f"Error inserting record into database: {e}")
-    else:
-        st.warning("Username not provided. Record not saved to database.")
-
-    # Re-encode the video with FFmpeg
-    def reencode_video(input_path, output_path):
-        subprocess.run([
-            "ffmpeg", "-y", "-i", input_path, "-vcodec", "libx264", "-crf", "28", output_path
-        ])
+    # ✅ Insert into DynamoDB
+    current_time = datetime.datetime.now().isoformat()
+    try:
+        table.put_item(
+            Item={
+                "username": username,
+                "datetime": current_time,
+                "squat_count": squat_count,
+                "pushup_count": pushup_count
+            }
+        )
+        st.success("Record inserted into DynamoDB successfully!")
+    except Exception as e:
+        st.error(f"Error inserting record into DynamoDB: {e}")
 
     # Save the video and re-encode it
     temp_output_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4").name
