@@ -219,7 +219,8 @@ if username and uploaded_file:
     st.write(f"**💪 Total Push-Ups:** {pushup_count}")
 
     # ✅ Insert into DynamoDB
-    current_time = datetime.datetime.now() #.isoformat()
+    # current_time = datetime.datetime.now() #.isoformat()
+    current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3] 
     try:
         table.put_item(
             Item={
