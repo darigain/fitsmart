@@ -72,7 +72,7 @@ exercise_filter = st.selectbox(
 # ------------------------------
 timeframe = st.selectbox(
     "Select Timeframe",
-    options=["Last 24 hours", "Last 7 days", "Last 30 days", "All Time"],
+    options=["Today", "Last 24 hours", "Last 7 days", "Last 30 days", "All Time"],
     index=1
 )
 
@@ -80,7 +80,10 @@ timeframe = st.selectbox(
 # APPLY TIMEFRAME FILTER
 # ------------------------------
 now = datetime.datetime.now()
-if timeframe == "Last 24 hours":
+today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)  # Start of today
+if timeframe == "Today":
+    df = df[df["datetime"] >= today_start]
+elif timeframe == "Last 24 hours":
     threshold = now - datetime.timedelta(hours=24)
     df = df[df["datetime"] >= threshold]
 elif timeframe == "Last 7 days":
