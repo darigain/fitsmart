@@ -1,49 +1,63 @@
 import streamlit as st
-import psycopg2
 import pandas as pd
 import plotly.express as px
 import datetime
+import boto3
 
+# Load credentials from Streamlit secrets
+AWS_ACCESS_KEY_ID = st.secrets["AWS_ACCESS_KEY_ID"]
+AWS_SECRET_ACCESS_KEY = st.secrets["AWS_SECRET_ACCESS_KEY"]
+AWS_REGION = st.secrets["AWS_REGION"]
+DYNAMODB_TABLE = st.secrets["DYNAMODB_TABLE"]
+
+# Initialize DynamoDB client
+dynamodb = boto3.resource(
+    "dynamodb",
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_REGION,
+)
+table = dynamodb.Table(DYNAMODB_TABLE)
+
+# DATA LOADING FUNCTION (from DynamoDB)
 @st.cache_data(show_spinner=False)
 def load_data():
     """
-    Connect to the database and load exercise_records data into a DataFrame.
+    Connect to DynamoDB and load exercise_records data into a DataFrame.
     """
     try:
-        conn = psycopg2.connect(
-            host=st.secrets["db"]["host"],
-            database=st.secrets["db"]["database"],
-            user=st.secrets["db"]["user"],
-            password=st.secrets["db"]["password"],
-            port=st.secrets["db"]["port"]
-        )
-        query = "SELECT username, datetime, squat_count, pushup_count FROM exercise_records ORDER BY datetime"
-        df = pd.read_sql_query(query, conn)
-        conn.close()
-        # Ensure that the datetime column is in datetime format.
-        df['datetime'] = pd.to_datetime(df['datetime'])
+        response = table.scan()  # Fetch all records from DynamoDB
+        items = response.get("Items", [])
+        if not items:
+            return pd.DataFrame()  # Return an empty DataFrame if no records exist
+
+        df = pd.DataFrame(items)
+        if "datetime" in df.columns:
+            df["datetime"] = pd.to_datetime(df["datetime"])  # Ensure datetime format
         return df
+
     except Exception as e:
-        st.error(f"Error retrieving data: {e}")
+        st.error(f"Error retrieving data from DynamoDB: {e}")
         return pd.DataFrame()
 
 st.title("Exercise Statistics")
 st.write("Are you a push-up or squat hero? 🏋️‍♀️💪 Check it out! 🔍")
+
 # ------------------------------
-# Refresh Button (now that load_data is defined)
+# Refresh Button
 # ------------------------------
 if st.button("Refresh Data"):
     st.cache_data.clear()
     st.rerun()  # Force a rerun to load fresh data
 
-# Load the full data from the database.
+# Load the full data from DynamoDB
 data_full = load_data()
 
 if data_full.empty:
     st.warning("No data found in the database.")
     st.stop()
 
-# Sidebar widget for filtering by user.
+# Sidebar widget for filtering by user
 user_options = sorted(data_full['username'].unique().tolist())
 selected_user = st.selectbox("Select a user", ["All Users"] + user_options)
 
